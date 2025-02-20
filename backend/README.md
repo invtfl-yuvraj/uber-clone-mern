@@ -92,3 +92,74 @@ This endpoint is used to log in an existing user.
   - **Description:** Invalid email or password.
   - **Body:**
     - `message` (string): Error message indicating invalid email or password.
+
+### User Profile
+
+#### GET /users/profile
+
+This endpoint is used to get the profile of the authenticated user.
+
+##### Request
+
+- **URL:** `/users/profile`
+- **Method:** `GET`
+- **Headers:**
+  - `Authorization`: Bearer token (required)
+
+##### Example Request
+
+```http
+GET /users/profile HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer <your_token>
+```
+
+##### Responses
+
+- **200 OK**
+
+  - **Description:** User profile retrieved successfully.
+  - **Body:**
+    - `user` (object): The authenticated user object.
+
+- **401 Unauthorized**
+
+  - **Description:** Unauthorized access due to missing or invalid token.
+  - **Body:**
+    - `message` (string): Error message indicating unauthorized access.
+
+### User Logout
+
+#### GET /users/logout
+
+This endpoint is used to log out the authenticated user and blacklist the token provided
+in cookie or headers.
+
+##### Request
+
+- **URL:** `/users/logout`
+- **Method:** `GET`
+- **Headers:**
+  - `Authorization`: Bearer token (required)
+
+##### Example Request
+
+```http
+GET /users/logout HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer <your_token>
+```
+
+##### Responses
+
+- **200 OK**
+
+  - **Description:** User successfully logged out.
+  - **Body:**
+    - `message` (string): Success message indicating the user has logged out.
+
+- **401 Unauthorized**
+
+  - **Description:** Unauthorized access due to missing or invalid token.
+  - **Body:**
+    - `message` (string): Error message indicating unauthorized access.

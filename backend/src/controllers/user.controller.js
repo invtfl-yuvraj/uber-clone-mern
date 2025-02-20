@@ -1,8 +1,9 @@
 import userModel from "../models/user.model.js";
 import { createUser } from "../services/user.service.js";
 import { validationResult } from "express-validator";
+import blackListTokenModel from "../models/blackListToken.model.js";
 
-const registerUser = async (req, res, next) => {
+export const registerUser = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -22,13 +23,14 @@ const registerUser = async (req, res, next) => {
   });
 
   const token = user.generateAuthToken();
+  res.cookie("token", token);
   res.status(201).json({
     token,
     user,
   });
 };
 
-const loginUser = async (req, res, next) => {
+export const loginUser = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -56,6 +58,7 @@ const loginUser = async (req, res, next) => {
   }
 
   const token = user.generateAuthToken();
+  res.cookie("token", token);
 
   res.status(200).json({
     token,
@@ -63,4 +66,19 @@ const loginUser = async (req, res, next) => {
   });
 };
 
-export { registerUser, loginUser };
+export const getUserProfile = async (req, res, next) => {
+    return res.status(201).json(req.user);
+};
+
+export const logoutUser = async (req, res, next) => {
+    res.clearCookie("token");
+
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+    await blackListTokenModel.create({token});
+
+    res.status(200).json({
+        message : "Logged Out Successfully"
+    });
+
+}
